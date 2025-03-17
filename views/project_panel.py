@@ -64,7 +64,12 @@ class ProjectPanel(QWidget):
         layout.addWidget(self.info_text)
         
         # Git panel section
+        git_label = QLabel("Git Operations:")
+        git_label.setStyleSheet("font-weight: bold;")
+        layout.addWidget(git_label)
+        
         self.git_panel = GitPanel(self.project_service)
+        self.git_panel.setVisible(True)  # Ensure the panel is visible
         layout.addWidget(self.git_panel)
         
         # Command buttons
@@ -135,15 +140,44 @@ class ProjectPanel(QWidget):
         self.project_dropdown.clear()
         project_names = [project.name for project in self.project_service.projects]
         self.project_dropdown.addItems(project_names)
+        
+        # Try to select the current project (dev-manager) by default
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        current_dir = os.path.dirname(current_dir)  # Go up one level to get the project root
+        debug_print(f"Current directory for project selection: {current_dir}")
+        
+        # Find the current project in the list
+        current_project_index = -1
+        for i, project in enumerate(self.project_service.projects):
+            if project.path == current_dir:
+                current_project_index = i
+                debug_print(f"Found current project at index {i}: {project.name}")
+                break
+        
+        # Select the current project if found, otherwise select the first project
+        if current_project_index >= 0:
+            self.project_dropdown.setCurrentIndex(current_project_index)
+        elif self.project_dropdown.count() > 0:
+            self.project_dropdown.setCurrentIndex(0)
+        
+        # Show the selected project info
+        if self.project_dropdown.currentIndex() >= 0:
+            self.show_project_info()
     
     def show_project_info(self):
         """Display information about the selected project"""
         current_index = self.project_dropdown.currentIndex()
+        debug_print(f"show_project_info called with index: {current_index}")
+        
         if current_index < 0 or current_index >= len(self.project_service.projects):
+            debug_print("Invalid project index")
             return
         
         project = self.project_service.projects[current_index]
+        debug_print(f"Selected project: {project.name} at {project.path}")
+        
         if not project.info:
+            debug_print(f"Loading project info for {project.name}")
             project.load_info()
         
         # Format project info for display
@@ -154,11 +188,14 @@ class ProjectPanel(QWidget):
         info_display += f"Notes: {project.info.get('notes','')}"
         
         # Update Git panel for selected project first to get Git info loaded
+        debug_print(f"Updating Git panel for project: {project.name}")
         self.git_panel.update_for_project(project)
         
         # Add Git repository information if available
+        debug_print(f"Project is_git_repo: {project.is_git_repo}")
         if project.is_git_repo:
             modified_count = project.get_modified_files_count()
+            debug_print(f"Modified files count: {modified_count}")
             info_display += f"\n\nGit Repository: Yes (Branch: {project.current_branch})"
             if modified_count > 0:
                 info_display += f"\nModified Files: {modified_count}"

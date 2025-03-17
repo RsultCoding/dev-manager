@@ -26,10 +26,32 @@ class ProjectService:
                         if os.path.exists(path):
                             project = Project(path)
                             self.projects.append(project)
+                            debug_print(f"Added project from cache: {project.name} at {project.path}")
                         else:
                             debug_print(f"Skipping non-existent project: {path}")
                 
                 debug_print(f"Loaded {len(self.projects)} projects from cache")
+                
+                # Initialize Git for the current project (dev-manager)
+                current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                debug_print(f"Current directory: {current_dir}")
+                
+                # Check if the current directory is in the projects list
+                current_project = None
+                for project in self.projects:
+                    if project.path == current_dir:
+                        current_project = project
+                        break
+                
+                if current_project:
+                    debug_print(f"Found current project in cache: {current_project.name}")
+                    from services.git_service import GitService
+                    git_service = GitService()
+                    current_project.load_git_info(git_service)
+                    debug_print(f"Current project is Git repo: {current_project.is_git_repo}")
+                else:
+                    debug_print("Current directory not found in projects list")
+                
                 return True
             except Exception as e:
                 debug_print(f"Error loading cache: {str(e)}")

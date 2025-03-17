@@ -459,20 +459,28 @@ class GitPanel(QWidget):
     
     def update_for_project(self, project):
         """Update the Git panel for the selected project"""
+        debug_print(f"GitPanel.update_for_project called for project: {project.name if project else 'None'}")
         self.current_project = project
         
         if project:
             debug_print(f"Updating Git panel for project: {project.name}")
+            debug_print(f"Project path: {project.path}")
+            debug_print(f"Project is_git_repo: {project.is_git_repo}")
+            
             self.set_status_message(f"Loading Git info for {project.name}...")
             
             try:
                 # Check if it's a Git repository and load Git info if needed
                 if not project.is_git_repo:
+                    debug_print(f"Loading Git info for project: {project.name}")
                     project.load_git_info(self.git_service)
+                    debug_print(f"After load_git_info, is_git_repo: {project.is_git_repo}")
                 
                 if project.is_git_repo:
                     # Enable the panel
+                    debug_print(f"Enabling Git panel for project: {project.name}")
                     self.setEnabled(True)
+                    self.setVisible(True)  # Ensure the panel is visible
                     
                     # Update UI elements
                     self.branch_label.setText(f"Current Branch: {project.current_branch}")
@@ -482,9 +490,14 @@ class GitPanel(QWidget):
                     # Update branch list
                     self.update_branch_list()
                     
+                    # Force a repaint to ensure UI updates
+                    self.repaint()
+                    
                     self.set_status_message("Git repository loaded successfully")
+                    debug_print(f"Git panel enabled and updated for {project.name}")
                 else:
                     # Disable the panel if it's not a Git repo
+                    debug_print(f"Project {project.name} is not a Git repository")
                     self.setEnabled(False)
                     self.branch_label.setText("Not a Git repository")
                     self.clear_file_checkboxes()

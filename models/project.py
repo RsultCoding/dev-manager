@@ -39,11 +39,16 @@ class Project:
     
     def load_git_info(self, git_service):
         """Load Git information for the project"""
+        debug_print(f"Project.load_git_info called for {self.name} at {self.path}")
         self.is_git_repo = git_service.is_git_repo(self.path)
+        debug_print(f"Project.load_git_info: is_git_repo = {self.is_git_repo}")
         
         if self.is_git_repo:
             self.current_branch = git_service.get_current_branch(self.path)
+            debug_print(f"Project.load_git_info: current_branch = {self.current_branch}")
+            
             self.git_status = git_service.get_status(self.path)
+            debug_print(f"Project.load_git_info: git_status = {self.git_status}")
             return True
         
         return False
@@ -67,10 +72,14 @@ class Project:
     
     def refresh_git_status(self, git_service):
         """Refresh Git status information"""
+        debug_print(f"Project.refresh_git_status called for {self.name} at {self.path}")
         if self.is_git_repo or git_service.is_git_repo(self.path):
             self.is_git_repo = True
             self.current_branch = git_service.get_current_branch(self.path)
+            debug_print(f"Project.refresh_git_status: current_branch = {self.current_branch}")
+            
             self.git_status = git_service.get_status(self.path)
+            debug_print(f"Project.refresh_git_status: git_status = {self.git_status}")
             return True
         
         return False 
