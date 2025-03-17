@@ -1,0 +1,5 @@
+{
+    "description": "A PyQt6-based application for managing development projects and Docker containers with Git integration",
+    "usage": "Run with 'python -m main' to manage local development projects and Docker containers",
+    "notes": "Provides Git operations, project management, and Docker container monitoring in a single interface"
+} 
