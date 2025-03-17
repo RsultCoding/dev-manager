@@ -40,9 +40,6 @@ class ProjectPanel(QWidget):
         self.project_dropdown.setMinimumWidth(300)
         selector_layout.addWidget(self.project_dropdown)
         
-        # Connect signal BEFORE updating dropdown to avoid calling show_project_info prematurely
-        self.project_dropdown.currentIndexChanged.connect(self.show_project_info)
-        
         # Scan button
         self.scan_button = QPushButton("Scan Now")
         self.scan_button.clicked.connect(self.start_scan)
@@ -72,9 +69,6 @@ class ProjectPanel(QWidget):
         self.git_panel = GitPanel(self.project_service)
         self.git_panel.setVisible(True)  # Ensure the panel is visible
         layout.addWidget(self.git_panel)
-        
-        # Now update the dropdown after git_panel is created
-        self.update_project_dropdown()
         
         # Command buttons
         btn_frame = QWidget()
@@ -138,6 +132,12 @@ class ProjectPanel(QWidget):
         self.output_text.setReadOnly(True)
         self.output_text.setStyleSheet("background-color: #f0f0f0;")
         layout.addWidget(self.output_text)
+
+        # NOW that all UI elements are created, connect the signal and update the dropdown
+        self.project_dropdown.currentIndexChanged.connect(self.show_project_info)
+        self.update_project_dropdown()
+        
+        debug_print("UI creation complete")
     
     def update_project_dropdown(self):
         """Update the project dropdown with current projects"""
