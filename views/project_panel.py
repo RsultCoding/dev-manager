@@ -37,10 +37,11 @@ class ProjectPanel(QWidget):
         self.project_dropdown = QComboBox()
         # Print the styleSheet of the project dropdown for debugging
         debug_print(f"Project dropdown styleSheet: {self.project_dropdown.styleSheet()}")
-        self.update_project_dropdown()
-        self.project_dropdown.currentIndexChanged.connect(self.show_project_info)
         self.project_dropdown.setMinimumWidth(300)
         selector_layout.addWidget(self.project_dropdown)
+        
+        # Connect signal BEFORE updating dropdown to avoid calling show_project_info prematurely
+        self.project_dropdown.currentIndexChanged.connect(self.show_project_info)
         
         # Scan button
         self.scan_button = QPushButton("Scan Now")
@@ -63,7 +64,7 @@ class ProjectPanel(QWidget):
         self.info_text.setMinimumHeight(100)
         layout.addWidget(self.info_text)
         
-        # Git panel section
+        # Git panel section - must be created before calling update_project_dropdown
         git_label = QLabel("Git Operations:")
         git_label.setStyleSheet("font-weight: bold;")
         layout.addWidget(git_label)
@@ -71,6 +72,9 @@ class ProjectPanel(QWidget):
         self.git_panel = GitPanel(self.project_service)
         self.git_panel.setVisible(True)  # Ensure the panel is visible
         layout.addWidget(self.git_panel)
+        
+        # Now update the dropdown after git_panel is created
+        self.update_project_dropdown()
         
         # Command buttons
         btn_frame = QWidget()
@@ -160,9 +164,7 @@ class ProjectPanel(QWidget):
         elif self.project_dropdown.count() > 0:
             self.project_dropdown.setCurrentIndex(0)
         
-        # Show the selected project info
-        if self.project_dropdown.currentIndex() >= 0:
-            self.show_project_info()
+        # Don't call show_project_info here - it will be triggered by the signal
     
     def show_project_info(self):
         """Display information about the selected project"""
