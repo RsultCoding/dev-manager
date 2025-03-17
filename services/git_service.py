@@ -229,6 +229,21 @@ class GitService:
             debug_print(f"Error pulling changes: {str(e)}")
             return False, str(e)
     
+    def push(self, project_path):
+        """Push commits to remote repository"""
+        try:
+            result = subprocess.run(
+                ["git", "push"],
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+                timeout=SUBPROCESS_TIMEOUT
+            )
+            return result.returncode == 0, result.stdout + result.stderr
+        except Exception as e:
+            debug_print(f"Error pushing changes: {str(e)}")
+            return False, str(e)
+    
     def stash(self, project_path):
         """Stash changes"""
         try:

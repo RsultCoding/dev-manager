@@ -177,6 +177,11 @@ class GitPanel(QWidget):
         pull_btn.clicked.connect(self.on_pull)
         quick_layout.addWidget(pull_btn)
         
+        push_btn = QPushButton("Push")
+        push_btn.setStyleSheet(button_style)
+        push_btn.clicked.connect(self.on_push)
+        quick_layout.addWidget(push_btn)
+        
         stash_btn = QPushButton("Stash")
         stash_btn.setStyleSheet(button_style)
         stash_btn.clicked.connect(self.on_stash)
@@ -385,7 +390,7 @@ class GitPanel(QWidget):
         if not self.current_project:
             return
         
-        self.set_status_message("Pulling changes from remote...")
+        self.set_status_message("Pulling changes...")
         success, output = self.git_service.pull(self.current_project.path)
         if success:
             self.refresh_git_status()
@@ -395,6 +400,21 @@ class GitPanel(QWidget):
         else:
             self.set_status_message("Failed to pull changes")
             QMessageBox.critical(self, "Error", f"Failed to pull changes:\n{output}")
+    
+    def on_push(self):
+        """Push commits to remote"""
+        if not self.current_project:
+            return
+        
+        self.set_status_message("Pushing commits...")
+        success, output = self.git_service.push(self.current_project.path)
+        if success:
+            self.update_recent_commits()
+            self.set_status_message("Commits pushed successfully")
+            QMessageBox.information(self, "Success", "Commits pushed successfully")
+        else:
+            self.set_status_message("Failed to push commits")
+            QMessageBox.critical(self, "Error", f"Failed to push commits:\n{output}")
     
     def on_stash(self):
         """Stash changes"""
