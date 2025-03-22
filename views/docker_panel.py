@@ -46,13 +46,14 @@ class DockerPanel(QWidget):
         
         # Output section - only show when needed
         self.output_label = QLabel("Docker Output:")
+        self.output_label.setStyleSheet("font-weight: bold;")
         layout.addWidget(self.output_label)
         
         # Text output for general messages
         self.output_text = QTextEdit()
         self.output_text.setReadOnly(True)
         self.output_text.setStyleSheet("background-color: #f0f0f0;")
-        self.output_text.setMaximumHeight(100)  # Limit height for status messages
+        self.output_text.setMaximumHeight(150)  # Set to 150px to match project panel
         self.output_text.setVisible(False)  # Hide initially
         layout.addWidget(self.output_text)
         
@@ -60,6 +61,7 @@ class DockerPanel(QWidget):
         self.containers_table = QTableWidget()
         self.containers_table.setColumnCount(4)
         self.containers_table.setHorizontalHeaderLabels(["CONTAINER ID", "IMAGE", "STATUS", "NAME"])
+        self.containers_table.setMaximumHeight(120)  # Set maximum height to 120px
         
         # Configure container table columns
         container_header = self.containers_table.horizontalHeader()
@@ -77,6 +79,7 @@ class DockerPanel(QWidget):
         self.images_table = QTableWidget()
         self.images_table.setColumnCount(5)
         self.images_table.setHorizontalHeaderLabels(["REPOSITORY", "TAG", "IMAGE ID", "CREATED", "SIZE"])
+        self.images_table.setMaximumHeight(120)  # Set maximum height to 120px
         
         # Configure images table columns
         image_header = self.images_table.horizontalHeader()

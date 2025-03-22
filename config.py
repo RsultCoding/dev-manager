@@ -24,3 +24,7 @@ LOG_FILE = os.path.join(BASE_DIR, 'dev_support.log')
 # Enable/disable features
 ENABLE_LOGGING = True
 DOCKER_ENABLED = True
+
+# Database configuration
+DATABASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database')
+PROJECTS_DB_DIR = os.path.join(DATABASE_DIR, 'projects')

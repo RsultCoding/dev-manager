@@ -10,6 +10,7 @@ A PyQt6-based application for managing development projects and Docker container
 - Docker container monitoring
 - Docker image listing with table view
 - Git repository management and operations
+- JSON file editing with intuitive UI
 
 ## Installation
 
@@ -34,6 +35,17 @@ The application can be configured by editing the `config.py` file:
 - Configure security settings
 - Adjust timeout settings
 - Enable/disable features
+
+## JSON Editor
+
+The application includes a built-in JSON editor for modifying configuration files:
+
+- Edit project information and scripts with a user-friendly interface
+- Table-based key-value editing with dedicated text area for long values
+- Support for both simple and nested JSON structures
+- **Dual storage system** that maintains copies of JSON files in both project directories and a central database
+- Intelligent handling of differences between project and database versions
+- See `json_editor.md` for detailed usage instructions
 
 ## Git Functionality
 

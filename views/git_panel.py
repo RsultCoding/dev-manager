@@ -39,7 +39,7 @@ class GitPanel(QWidget):
         # Git panel title with current branch
         header_layout = QHBoxLayout()
         title = QLabel("Git Operations")
-        title.setStyleSheet("font-weight: bold; background: none; border: none;")
+        title.setStyleSheet("font-size: 16px; font-weight: bold;")
         header_layout.addWidget(title)
         
         self.branch_label = QLabel("Current Branch: main")
@@ -56,6 +56,7 @@ class GitPanel(QWidget):
         
         # Create label exactly like "Select Project:" label
         branch_label = QLabel("Branch:")
+        branch_label.setStyleSheet("font-weight: bold;")
         branch_layout.addWidget(branch_label)
         
         # Reset branch dropdown to match project dropdown exactly with explicit styling
@@ -82,6 +83,8 @@ class GitPanel(QWidget):
         # Refresh button
         refresh_btn = QPushButton("⟳")
         refresh_btn.setToolTip("Refresh Git status and branches")
+        refresh_btn.setStyleSheet(button_style)
+        refresh_btn.setMinimumWidth(30)
         refresh_btn.setMaximumWidth(30)
         refresh_btn.clicked.connect(self.refresh_git_panel)
         branch_layout.addWidget(refresh_btn)

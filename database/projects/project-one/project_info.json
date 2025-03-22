@@ -1,0 +1,6 @@
+{
+    "description": "My fine test project.",
+    "usage": "docker-compose up -d",
+    "notes": "Runs on port 8000"
+  }
+  
